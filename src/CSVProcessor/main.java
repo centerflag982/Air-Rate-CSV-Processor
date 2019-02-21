@@ -43,14 +43,13 @@ public class main {
     }
 
     static String addOriginCharge(String startingCharge){
-        //final double ORIGIN_CHARGE = 0.10;
         String adjustedCharge;
         try {
             double chargeDouble = Double.parseDouble(startingCharge);
             chargeDouble += ORIGIN_CHARGE;
             chargeDouble = Math.round(chargeDouble * 100);
             chargeDouble = chargeDouble / 100;
-            adjustedCharge = Double.toString(chargeDouble);
+            adjustedCharge = String.format("%.2f", chargeDouble);
         }
         catch (NumberFormatException e){
             adjustedCharge = startingCharge;
