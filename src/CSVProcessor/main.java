@@ -7,24 +7,27 @@ import java.util.Scanner;
 
 public class main {
 
-    static final double ORIGIN_CHARGE = 0.10;
+    static final double ORIGIN_CHARGE = 0.25;
+    static final String[] ORIGIN_IATA = {"LAX", "LAS", "SAN", "SFO", "SJC"};
 
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("C:\\Users\\International 2\\Desktop\\Rate overhaul\\Lufthansa\\ord_etc.csv");
-        FileWriter fileWriter = new FileWriter("C:\\Users\\International 2\\Desktop\\Rate overhaul\\Lufthansa\\ord_etc_processed.csv");
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        Scanner scanner = new Scanner(inputFile);
+        for (String origin : ORIGIN_IATA) {
+            File inputFile = new File("C:\\Users\\International 2\\Desktop\\Rate overhaul\\Lufthansa\\lax_etc.csv");
+            String filePath = "C:\\Users\\International 2\\Desktop\\Rate overhaul\\Lufthansa\\" + origin + "_processed.csv";
+            FileWriter fileWriter = new FileWriter(filePath);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            Scanner scanner = new Scanner(inputFile);
 
-        while (scanner.hasNextLine()){
-            String outputString = processLine(scanner.nextLine());
-            System.out.println(outputString);
-            printWriter.println(outputString);
+            while (scanner.hasNextLine()) {
+                String outputString = processLine(scanner.nextLine(), origin);
+                System.out.println(outputString);
+                printWriter.println(outputString);
+            }
+            printWriter.close();
         }
-        printWriter.close();
-
     }
 
-    static String processLine(String inputLine){
+    static String processLine(String inputLine, String origin){
         String processedLine;
         String firstChar = inputLine.substring(0,1);
         if (firstChar.equals("#")){
@@ -32,11 +35,12 @@ public class main {
         } else {
             inputLine = inputLine.replace("$", "");
             inputLine = inputLine.replace(" ", "");
-            String inputArray[] = inputLine.split(",");
-            for (int i = 3; i < 7; i++){
+            String[] inputArray = inputLine.split(",");
+            inputArray[0] = origin;
+            for (int i = 4; i < 8; i++){
                 inputArray[i] = addOriginCharge(inputArray[i]);
             }
-            inputArray[8] = addOriginCharge(inputArray[8]);
+            inputArray[9] = addOriginCharge(inputArray[9]);
             processedLine = String.join(",", inputArray);
         }
         return processedLine;
